@@ -3,7 +3,7 @@
 ### Codigo de pruebas
 ```c++
 #include "esp_camera.h"
-#include "Arduino.h"
+//#include "Arduino.h"
 #include "FS.h"                // SD Card ESP32
 #include "SD_MMC.h"            // SD Card ESP32
 //#include "soc/soc.h"           // Disable brownour problems
