@@ -1,6 +1,6 @@
 # Esp32-Cam-Foto
 
-### Codigo de pruebas
+### Codigo de pruebas que funciona para sacar foto
 ```c++
 #include "esp_camera.h"
 //#include "Arduino.h"
@@ -140,6 +140,83 @@ void setup() {
 void loop()
 {
 
+}
+```
+
+### Codigo de pruebas para contar la cantidad de archivos en la memoria SD NO COMPROBADO
+```c++
+#include <SD.h>
+
+//File root;
+
+int fileCountOnSD = 0; // for counting files
+
+
+void setup() {
+  // Open serial communications and wait for port to open:
+  Serial.begin(9600);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+
+  Serial.print("Initializing SD card...");
+
+  if (!SD.begin(4)) {
+    Serial.println("initialization failed!");
+    while (1);
+  }
+  Serial.println("initialization done.");
+
+  //root = SD.open("/");
+
+  printDirectory();
+
+  // Now print the total files count
+  Serial.println(F("fileCountOnSD: "));
+  Serial.println(fileCountOnSD);
+
+  Serial.println("done!");
+} // end setup
+
+
+
+void loop() {
+  // nothing happens after setup finishes.
+}
+
+
+
+void printDirectory() 
+{
+  File root = SD.open("/");
+  
+  while (true) 
+  {
+    File entry =  root.openNextFile();
+    if (!entry) 
+    {
+      // no more files
+      break;
+    }
+    
+    //for (uint8_t i = 0; i < numTabs; i++) {
+     // Serial.print('\t');
+    //}
+    
+    Serial.print(entry.name());
+    // for each file count it
+    fileCountOnSD++;
+
+    //if (entry.isDirectory()) {
+     // Serial.println("/");
+      //printDirectory(entry, numTabs + 1);
+    //} else {
+      // files have sizes, directories do not
+     // Serial.print("\t\t");
+     // Serial.println(entry.size(), DEC);
+    //}
+    entry.close();
+  }
 }
 ```
 
