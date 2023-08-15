@@ -143,87 +143,7 @@ void loop()
 }
 ```
 
-### Codigo de pruebas para contar la cantidad de archivos en la memoria SD NO COMPROBADO
-```c++
-#include <SD.h>
-
-//File root;
-
-int fileCountOnSD = 0; // for counting files
-
-
-void setup() {
-  // Open serial communications and wait for port to open:
-  Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
-
-  Serial.print("Initializing SD card...");
-
-  if (!SD.begin(4)) {
-    Serial.println("initialization failed!");
-    while (1);
-  }
-  Serial.println("initialization done.");
-
-  //root = SD.open("/");
-
-  printDirectory();
-
-  // Now print the total files count
-  Serial.println(F("fileCountOnSD: "));
-  Serial.println(fileCountOnSD);
-
-  Serial.println("done!");
-} // end setup
-
-
-
-void loop() {
-  // nothing happens after setup finishes.
-}
-
-
-
-void printDirectory() 
-{
-  File root = SD.open("/");
-  
-  while (true) 
-  {
-    File entry =  root.openNextFile();
-    if (!entry) 
-    {
-      // no more files
-      break;
-    }
-    
-    //for (uint8_t i = 0; i < numTabs; i++) {
-     // Serial.print('\t');
-    //}
-    
-    Serial.print(entry.name());
-    // for each file count it
-    fileCountOnSD++;
-
-    //if (entry.isDirectory()) {
-     // Serial.println("/");
-      //printDirectory(entry, numTabs + 1);
-    //} else {
-      // files have sizes, directories do not
-     // Serial.print("\t\t");
-     // Serial.println(entry.size(), DEC);
-    //}
-    entry.close();
-  }
-}
-```
-
-IDEA ORIGINALMENTE EN CODIGO UTILIZA LA MEMORIA EEPROM QUE ESTA OBSOLETA PERO INTERNAMENTE SE UTILIZA LA MEMORIA NVS, PORQUE UTILIZAR LA MEMORIA INTERNA DEL MICROCONTROLADOR Y NO UTILIZAR LA TARJETA SD QUE ES UNA MEJOR MEMORIA SIMPLEMENTE SE PUEDE CONTAR CUANTOS IMAGENES AHI EN LA CARPETA SACAR EL TOTAL Y EL CONTADOR SUMARLE +1 EN EL NOMBRE Y LISTO
-
-FRAMESIZE_VGA mas pequeña pero con mejor resolucion
-
+### Codigo de pruebas que cuenta las cantidad de archivos en la tarjeta sd funciona
 ```c++
 #include "FS.h"                // SD Card ESP32
 #include "SD_MMC.h"            // SD Card ESP32
@@ -233,6 +153,8 @@ int fileCountOnSD = 0; // for counting files
 
 
 void setup() {
+  delay(2000);
+  
   Serial.begin(115200);
   
   if(!SD_MMC.begin()) 
@@ -295,4 +217,11 @@ void printDirectory(File dir, int numTabs) {
     entry.close();
   }
 }
+
 ```
+
+IDEA ORIGINALMENTE EN CODIGO UTILIZA LA MEMORIA EEPROM QUE ESTA OBSOLETA PERO INTERNAMENTE SE UTILIZA LA MEMORIA NVS, PORQUE UTILIZAR LA MEMORIA INTERNA DEL MICROCONTROLADOR Y NO UTILIZAR LA TARJETA SD QUE ES UNA MEJOR MEMORIA SIMPLEMENTE SE PUEDE CONTAR CUANTOS IMAGENES AHI EN LA CARPETA SACAR EL TOTAL Y EL CONTADOR SUMARLE +1 EN EL NOMBRE Y LISTO
+
+FRAMESIZE_VGA mas pequeña pero con mejor resolucion
+
+
