@@ -228,6 +228,9 @@ FRAMESIZE_VGA mas pequeña pero con mejor resolucion
 #include "FS.h"                // SD Card ESP32
 #include "SD_MMC.h"            // SD Card ESP32
 
+File root;
+int fileCountOnSD = 0; // for counting files
+
 
 void setup() {
   Serial.begin(115200);
@@ -245,6 +248,18 @@ void setup() {
     return;
   }
 
+ // const char* dir = ("/");
+  root = SD_MMC.open("/");
+  
+
+  printDirectory(root, 0);
+
+  // Now print the total files count
+  Serial.println(F("fileCountOnSD: "));
+  Serial.println(fileCountOnSD);
+
+  Serial.println("done!");
+
   
 }
 
@@ -253,37 +268,31 @@ void loop() {
 
 }
 
-void printDirectory() 
-{
-  File root = FS.open("/");
-  
-  while (true) 
-  {
-    File entry = root.openNextFile();
-    if (!entry) 
-    {
+void printDirectory(File dir, int numTabs) {
+  while (true) {
+
+    File entry =  dir.openNextFile();
+    if (! entry) {
       // no more files
       break;
     }
-    
-    //for (uint8_t i = 0; i < numTabs; i++) {
-     // Serial.print('\t');
-    //}
-    
+    for (uint8_t i = 0; i < numTabs; i++) {
+      Serial.print('\t');
+    }
     Serial.print(entry.name());
+
     // for each file count it
     fileCountOnSD++;
 
-    //if (entry.isDirectory()) {
-     // Serial.println("/");
-      //printDirectory(entry, numTabs + 1);
-    //} else {
+    if (entry.isDirectory()) {
+      Serial.println("/");
+      printDirectory(entry, numTabs + 1);
+    } else {
       // files have sizes, directories do not
-     // Serial.print("\t\t");
-     // Serial.println(entry.size(), DEC);
-    //}
+      Serial.print("\t\t");
+      Serial.println(entry.size(), DEC);
+    }
     entry.close();
   }
 }
-
 ```
