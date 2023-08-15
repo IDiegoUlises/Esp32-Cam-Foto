@@ -224,6 +224,7 @@ IDEA ORIGINALMENTE EN CODIGO UTILIZA LA MEMORIA EEPROM QUE ESTA OBSOLETA PERO IN
 
 FRAMESIZE_VGA mas pequeña pero con mejor resolucion
 
+```c++
 #include "FS.h"                // SD Card ESP32
 #include "SD_MMC.h"            // SD Card ESP32
 
@@ -284,3 +285,5 @@ void printDirectory()
     entry.close();
   }
 }
+
+```
