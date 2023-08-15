@@ -223,3 +223,64 @@ void printDirectory()
 IDEA ORIGINALMENTE EN CODIGO UTILIZA LA MEMORIA EEPROM QUE ESTA OBSOLETA PERO INTERNAMENTE SE UTILIZA LA MEMORIA NVS, PORQUE UTILIZAR LA MEMORIA INTERNA DEL MICROCONTROLADOR Y NO UTILIZAR LA TARJETA SD QUE ES UNA MEJOR MEMORIA SIMPLEMENTE SE PUEDE CONTAR CUANTOS IMAGENES AHI EN LA CARPETA SACAR EL TOTAL Y EL CONTADOR SUMARLE +1 EN EL NOMBRE Y LISTO
 
 FRAMESIZE_VGA mas pequeña pero con mejor resolucion
+
+#include "FS.h"                // SD Card ESP32
+#include "SD_MMC.h"            // SD Card ESP32
+
+
+void setup() {
+  Serial.begin(115200);
+  
+  if(!SD_MMC.begin()) 
+  {
+    Serial.println("SD Card Mount Failed");
+    return;
+  }
+
+  uint8_t cardType = SD_MMC.cardType();
+  if (cardType == CARD_NONE) 
+  {
+    Serial.println("No SD Card attached");
+    return;
+  }
+
+  
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+}
+
+void printDirectory() 
+{
+  File root = FS.open("/");
+  
+  while (true) 
+  {
+    File entry = root.openNextFile();
+    if (!entry) 
+    {
+      // no more files
+      break;
+    }
+    
+    //for (uint8_t i = 0; i < numTabs; i++) {
+     // Serial.print('\t');
+    //}
+    
+    Serial.print(entry.name());
+    // for each file count it
+    fileCountOnSD++;
+
+    //if (entry.isDirectory()) {
+     // Serial.println("/");
+      //printDirectory(entry, numTabs + 1);
+    //} else {
+      // files have sizes, directories do not
+     // Serial.print("\t\t");
+     // Serial.println(entry.size(), DEC);
+    //}
+    entry.close();
+  }
+}
