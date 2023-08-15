@@ -173,8 +173,9 @@ void setup() {
  // const char* dir = ("/");
   root = SD_MMC.open("/");
   
-
-  printDirectory(root, 0);
+  //Cuenta todos los archivo del root las subcarpetas que tiene archivo no cuenta sus archvios
+  //pero cuenta una carpeta como un archivo
+  printDirectory(root);
 
   // Now print the total files count
   Serial.println(F("fileCountOnSD: "));
@@ -190,22 +191,25 @@ void loop() {
 
 }
 
-void printDirectory(File dir, int numTabs) {
-  while (true) {
-
+void printDirectory(File dir) {
+  while (true) 
+  {
     File entry =  dir.openNextFile();
-    if (! entry) {
+    if (!entry) 
+    {
       // no more files
       break;
     }
-    for (uint8_t i = 0; i < numTabs; i++) {
-      Serial.print('\t');
-    }
+    
+    //for (uint8_t i = 0; i < numTabs; i++) {
+     // Serial.print('\t');
+    //}
+    
     Serial.print(entry.name());
-
     // for each file count it
     fileCountOnSD++;
 
+/*
     if (entry.isDirectory()) {
       Serial.println("/");
       printDirectory(entry, numTabs + 1);
@@ -214,10 +218,10 @@ void printDirectory(File dir, int numTabs) {
       Serial.print("\t\t");
       Serial.println(entry.size(), DEC);
     }
+    */
     entry.close();
   }
 }
-
 ```
 
 IDEA ORIGINALMENTE EN CODIGO UTILIZA LA MEMORIA EEPROM QUE ESTA OBSOLETA PERO INTERNAMENTE SE UTILIZA LA MEMORIA NVS, PORQUE UTILIZAR LA MEMORIA INTERNA DEL MICROCONTROLADOR Y NO UTILIZAR LA TARJETA SD QUE ES UNA MEJOR MEMORIA SIMPLEMENTE SE PUEDE CONTAR CUANTOS IMAGENES AHI EN LA CARPETA SACAR EL TOTAL Y EL CONTADOR SUMARLE +1 EN EL NOMBRE Y LISTO
