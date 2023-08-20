@@ -282,16 +282,16 @@ void setup()
 
   if (psramFound())
   {
-    config.frame_size = FRAMESIZE_UXGA; // FRAMESIZE_ + QVGA|CIF|VGA|SVGA|XGA|SXGA|UXGA
+    config.frame_size = FRAMESIZE_VGA; // FRAMESIZE_ + QVGA|CIF|VGA|SVGA|XGA|SXGA|UXGA
     config.jpeg_quality = 10;
     config.fb_count = 2;
   }
 
   else
   {
-    config.frame_size = FRAMESIZE_SVGA;
-    config.jpeg_quality = 12;
-    config.fb_count = 1;
+    config.frame_size = FRAMESIZE_VGA;
+    config.jpeg_quality = 10;
+    config.fb_count = 2;
   }
 
   // Init Camera
@@ -317,8 +317,7 @@ void setup()
 
 void loop()
 {
-  tomarFoto();
-  fotoNum++;
+  TomarFoto();
 }
 
 void TomarFoto()
@@ -354,9 +353,14 @@ void TomarFoto()
 
   esp_camera_fb_return(fb);
 
+  //Incrementa el valor
+  fotoNum++;
+
+  //Retardo de 1 segundo
   delay(2000);
 
 }
+
 
 ```
 
