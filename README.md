@@ -189,7 +189,7 @@ void loop()
 
 int contarFiles()
 {
-  //Inicia en -1 porque en el bucle do-while se hace un paso de mas
+  //Inicia en -1 porque en el bucle do-while se hace un paso adicional
   int numFiles = -1;
 
   //Abre la raiz de la sd
