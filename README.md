@@ -267,13 +267,14 @@ void contarFiles()
 
   File entrar = null;
   
-  while(entrar == !entrar)
+  while(entrar == false)
   {
     entrar = root.openNextFile();
     numFiles++;
   }
 
 }
+
 
 ```
 
