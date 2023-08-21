@@ -1,4 +1,4 @@
-# Esp32-Cam-Foto
+# Esp32-Cam
 
 ### Codigo para tomar una foto
 ```c++
