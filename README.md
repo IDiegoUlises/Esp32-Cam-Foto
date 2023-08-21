@@ -198,7 +198,7 @@ int contarFiles()
   //Crea la variable tipo File
   File entrar;
 
-  //Realiza un ciclo while sin comprobar la condicion
+  //Realiza un ciclo do-while para no comprobar la primera condicion
   do {
     entrar = root.openNextFile(); //Se mueve al archivo siguiente
     numFiles++; //Aumenta el contador
