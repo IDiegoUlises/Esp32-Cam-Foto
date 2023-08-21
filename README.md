@@ -227,12 +227,18 @@ void printDirectory(File dir) {
 }
 ```
 
+
+IDEA ORIGINALMENTE EN CODIGO UTILIZA LA MEMORIA EEPROM QUE ESTA OBSOLETA PERO INTERNAMENTE SE UTILIZA LA MEMORIA NVS, PORQUE UTILIZAR LA MEMORIA INTERNA DEL MICROCONTROLADOR Y NO UTILIZAR LA TARJETA SD QUE ES UNA MEJOR MEMORIA SIMPLEMENTE SE PUEDE CONTAR CUANTOS IMAGENES AHI EN LA CARPETA SACAR EL TOTAL Y EL CONTADOR SUMARLE +1 EN EL NOMBRE Y LISTO
+
+FRAMESIZE_VGA mas pequeña pero con mejor resolucion
+
 ### Codigo experimental que cuenta archivo sd
 ```c++
 #include "FS.h"
 #include "SD_MMC.h"
 
-int numFiles = 0;
+//Empieza en negativo porque se usa una condicion do-while
+int numFiles = -1;
 
 void setup()
 {
@@ -254,6 +260,12 @@ void setup()
     Serial.println("No SD Card introducida");
     return;
   }
+
+  //Codigo experimental
+  contarFiles();
+  delay(2000);
+  Serial.print("Cantidad de archivos: ");
+  Serial.println(numFiles);
 }
 
 void loop()
@@ -265,19 +277,14 @@ void contarFiles()
 {
   File root = SD_MMC.open("/");
 
-  File entrar = null;
+  File entrar;
   
-  while(entrar == false)
-  {
+  do{
     entrar = root.openNextFile();
     numFiles++;
   }
+  while(entrar == true);
 
 }
 
-
 ```
-
-IDEA ORIGINALMENTE EN CODIGO UTILIZA LA MEMORIA EEPROM QUE ESTA OBSOLETA PERO INTERNAMENTE SE UTILIZA LA MEMORIA NVS, PORQUE UTILIZAR LA MEMORIA INTERNA DEL MICROCONTROLADOR Y NO UTILIZAR LA TARJETA SD QUE ES UNA MEJOR MEMORIA SIMPLEMENTE SE PUEDE CONTAR CUANTOS IMAGENES AHI EN LA CARPETA SACAR EL TOTAL Y EL CONTADOR SUMARLE +1 EN EL NOMBRE Y LISTO
-
-FRAMESIZE_VGA mas pequeña pero con mejor resolucion
