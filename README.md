@@ -1,6 +1,6 @@
 # Esp32-Cam-Foto
 
-### Codigo que funciona para una tomar una foto
+### Codigo para tomar una foto
 ```c++
 #include "esp_camera.h"
 #include "FS.h"
@@ -146,99 +146,10 @@ void TomarFoto()
 
 ```
 
-### Codigo de pruebas que cuenta las cantidad de archivos en la tarjeta sd funciona
-```c++
-#include "FS.h"                // SD Card ESP32
-#include "SD_MMC.h"            // SD Card ESP32
-
-File root;
-int fileCountOnSD = 0; // for counting files
-
-
-void setup() {
-  delay(2000);
-  
-  Serial.begin(115200);
-  
-  if(!SD_MMC.begin()) 
-  {
-    Serial.println("SD Card Mount Failed");
-    return;
-  }
-
-  uint8_t cardType = SD_MMC.cardType();
-  if (cardType == CARD_NONE) 
-  {
-    Serial.println("No SD Card attached");
-    return;
-  }
-
- // const char* dir = ("/");
-  root = SD_MMC.open("/");
-  
-  //Cuenta todos los archivo del root las subcarpetas que tiene archivo no cuenta sus archvios
-  //pero cuenta una carpeta como un archivo
-  printDirectory(root);
-
-  // Now print the total files count
-  Serial.println(F("fileCountOnSD: "));
-  Serial.println(fileCountOnSD);
-
-  Serial.println("done!");
-
-  
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
-}
-
-void printDirectory(File dir) {
-  while (true) 
-  {
-    File entry =  dir.openNextFile();
-    if (!entry) 
-    {
-      // no more files
-      break;
-    }
-    
-    //for (uint8_t i = 0; i < numTabs; i++) {
-     // Serial.print('\t');
-    //}
-    
-    Serial.print(entry.name());
-    // for each file count it
-    fileCountOnSD++;
-
-/*
-    if (entry.isDirectory()) {
-      Serial.println("/");
-      printDirectory(entry, numTabs + 1);
-    } else {
-      // files have sizes, directories do not
-      Serial.print("\t\t");
-      Serial.println(entry.size(), DEC);
-    }
-    */
-    entry.close();
-  }
-}
-```
-
-
-IDEA ORIGINALMENTE EN CODIGO UTILIZA LA MEMORIA EEPROM QUE ESTA OBSOLETA PERO INTERNAMENTE SE UTILIZA LA MEMORIA NVS, PORQUE UTILIZAR LA MEMORIA INTERNA DEL MICROCONTROLADOR Y NO UTILIZAR LA TARJETA SD QUE ES UNA MEJOR MEMORIA SIMPLEMENTE SE PUEDE CONTAR CUANTOS IMAGENES AHI EN LA CARPETA SACAR EL TOTAL Y EL CONTADOR SUMARLE +1 EN EL NOMBRE Y LISTO
-
-FRAMESIZE_VGA mas pequeña pero con mejor resolucion
-
-### Codigo experimental que cuenta archivo sd
+### Codigo que cuenta la cantidad de archivos de la tarjeta sd
 ```c++
 #include "FS.h"
 #include "SD_MMC.h"
-
-//Empieza en negativo porque se usa una condicion do-while
-int numFiles = -1;
 
 void setup()
 {
@@ -261,30 +172,49 @@ void setup()
     return;
   }
 
-  //Codigo experimental
-  contarFiles();
-  delay(2000);
-  Serial.print("Cantidad de archivos: ");
-  Serial.println(numFiles);
 }
 
 void loop()
 {
+  //La funcion para contar archivos que devuelve la cantidad de archivos
+  int contarArchivos = contarFiles();
 
+  //Imprime la cantidad de archivos de la sd
+  Serial.print("Cantidad de archivos: ");
+  Serial.println(contarArchivos);
+
+  //Retraso de 5 segundos
+  delay(5000);
 }
 
-void contarFiles()
+int contarFiles()
 {
+  //Inicia en -1 porque en el bucle do-while se hace un paso de mas
+  int numFiles = -1;
+
+  //Abre la raiz de la sd
   File root = SD_MMC.open("/");
 
+  //Crea la variable tipo File
   File entrar;
-  
-  do{
-    entrar = root.openNextFile();
-    numFiles++;
+
+  //Realiza un ciclo while sin comprobar la condicion
+  do {
+    entrar = root.openNextFile(); //Se mueve al archivo siguiente
+    numFiles++; //Aumenta el contador
+    //Recordar que una carpeta se lo detecta como un archivo
+    //Tambien recordar que los archivos ocultos del sistema los detecta
   }
-  while(entrar == true);
+  while (entrar == true); //Mientras es true se queda en bucle
 
+  //Devuelve la cantidad de archivos
+  return numFiles;
 }
-
 ```
+
+
+
+IDEA ORIGINALMENTE EN CODIGO UTILIZA LA MEMORIA EEPROM QUE ESTA OBSOLETA PERO INTERNAMENTE SE UTILIZA LA MEMORIA NVS, PORQUE UTILIZAR LA MEMORIA INTERNA DEL MICROCONTROLADOR Y NO UTILIZAR LA TARJETA SD QUE ES UNA MEJOR MEMORIA SIMPLEMENTE SE PUEDE CONTAR CUANTOS IMAGENES AHI EN LA CARPETA SACAR EL TOTAL Y EL CONTADOR SUMARLE +1 EN EL NOMBRE Y LISTO
+
+FRAMESIZE_VGA mas pequeña pero con mejor resolucion
+
