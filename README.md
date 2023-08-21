@@ -1,26 +1,17 @@
 # Esp32-Cam-Foto
 
-### Codigo de pruebas que funciona para sacar foto
+### Codigo que funciona para una tomar una foto
 ```c++
 #include "esp_camera.h"
-//#include "Arduino.h"
-#include "FS.h"                // SD Card ESP32
-#include "SD_MMC.h"            // SD Card ESP32
-//#include "soc/soc.h"           // Disable brownour problems
-//#include "soc/rtc_cntl_reg.h"  // Disable brownour problems
-//#include "driver/rtc_io.h"
-//#include <EEPROM.h>            // read and write from flash memory
+#include "FS.h"
+#include "SD_MMC.h"
 
-// define the number of bytes you want to access
-#define EEPROM_SIZE 1 //Modificar despues esto es para pruebas
-
-// Pin definition for CAMERA_MODEL_AI_THINKER
+//declaracion de pins para camara MODEL_AI_THINKER
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
 #define SIOD_GPIO_NUM     26
 #define SIOC_GPIO_NUM     27
-
 #define Y9_GPIO_NUM       35
 #define Y8_GPIO_NUM       34
 #define Y7_GPIO_NUM       39
@@ -33,15 +24,15 @@
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
-int pictureNumber = 0;
+//Numero de foto
+int fotoNum = 1;
 
-void setup() {
-  //WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
-
+void setup()
+{
+  //Inicia el puerto serial
   Serial.begin(115200);
-  //Serial.setDebugOutput(true);
-  //Serial.println();
 
+  //Configuracion de la camara
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -64,83 +55,95 @@ void setup() {
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
 
-  if (psramFound()) {
-    config.frame_size = FRAMESIZE_UXGA; // FRAMESIZE_ + QVGA|CIF|VGA|SVGA|XGA|SXGA|UXGA
-    config.jpeg_quality = 10;
+  //Verifica si es compatible con PSRAM y elige la configuracion adecuada
+  if (psramFound())
+  {
+    config.frame_size = FRAMESIZE_VGA; //Tamaño de la foto, se pueden elegir QVGA|CIF|VGA|SVGA|XGA|SXGA|UXGA, mientras mas pequeña mejor resolucion
+    config.jpeg_quality = 10; //10-63 mientras menor el numero mejor calidad
     config.fb_count = 2;
-  } else {
-    config.frame_size = FRAMESIZE_SVGA;
-    config.jpeg_quality = 12;
-    config.fb_count = 1;
   }
 
-  // Init Camera
+  else
+  {
+    config.frame_size = FRAMESIZE_VGA; //Tamaño de la foto, se pueden elegir QVGA|CIF|VGA|SVGA|XGA|SXGA|UXGA, mientras mas pequeña mejor resolucion
+    config.jpeg_quality = 10; //10-63 mientras menor el numero mejor calidad
+    config.fb_count = 2;
+  }
+
+  //Inicializar la camera con la configuracion
   esp_err_t err = esp_camera_init(&config);
-  if (err != ESP_OK) {
-    Serial.printf("Camera init failed with error 0x%x", err);
+  if (err != ESP_OK)
+  {
+    Serial.println("Camera no inicializada" + err);
     return;
   }
 
-  //Serial.println("Starting SD Card");
-  if (!SD_MMC.begin()) {
-    Serial.println("SD Card Mount Failed");
+  //SD incializada correctamente
+  if (!SD_MMC.begin())
+  {
+    Serial.println("SD Card Montada incorrectamente");
     return;
   }
 
   uint8_t cardType = SD_MMC.cardType();
-  if (cardType == CARD_NONE) {
-    Serial.println("No SD Card attached");
+
+  //En caso que no se detecte una tarjeta sd
+  if (cardType == CARD_NONE)
+  {
+    Serial.println("No SD Card introducida");
     return;
   }
 
-  camera_fb_t * fb = NULL;
-
-  // Take Picture with Camera
-  fb = esp_camera_fb_get();
-  if (!fb) {
-    Serial.println("Camera capture failed");
-    return;
-  }
-  // initialize EEPROM with predefined size
-  //EEPROM.begin(EEPROM_SIZE);
-  //Numero
-  pictureNumber = 1;
-
-  // Path where new picture will be saved in SD Card
-  String path = "/picture" + String(pictureNumber) + ".jpg";
-
-  fs::FS &fs = SD_MMC;
-  Serial.printf("Picture file name: %s\n", path.c_str());
-
-  File file = fs.open(path.c_str(), FILE_WRITE);
-  if (!file) {
-    Serial.println("Failed to open file in writing mode");
-  }
-  else {
-    file.write(fb->buf, fb->len); // payload (image), payload length
-    Serial.printf("Saved file to path: %s\n", path.c_str());
-    //EEPROM.write(0, pictureNumber);
-    //EEPROM.commit();
-  }
-  file.close();
-  esp_camera_fb_return(fb);
-
-  // Turns off the ESP32-CAM white on-board LED (flash) connected to GPIO 4
-  pinMode(4, OUTPUT);
-  digitalWrite(4, LOW);
-  //rtc_gpio_hold_en(GPIO_NUM_4);
-
-  delay(2000);
-  Serial.println("Going");
-  //delay(2000);
-  //esp_deep_sleep_start();
-  //Serial.println("This will never be printed");
 }
 
 void loop()
 {
-
+  TomarFoto();
 }
+
+void TomarFoto()
+{
+  camera_fb_t * fb = NULL;
+
+  //Toma la foto
+  fb = esp_camera_fb_get();
+  if (!fb)
+  {
+    Serial.println("La camara no pudo realizar la fotografia");
+    return;
+  }
+
+  //Ruta de la tarjeta sd donde se guardara la foto
+  String ruta = "/foto" + String(fotoNum) + ".jpg";
+
+  fs::FS &fs = SD_MMC;
+  Serial.println("Foto nombre de archivo: " + ruta);
+
+  File archivo = fs.open(ruta, FILE_WRITE);
+  if (!archivo)
+  {
+    Serial.println("Fallo en abrir el archivo para escribir");
+  }
+
+  else
+  {
+    //Escribe en la tarjeta sd la foto
+    archivo.write(fb->buf, fb->len);
+    Serial.println("Archivo guardado en la ruta: " + ruta);
+  }
+
+  //Cierra el archivo
+  archivo.close();
+
+  esp_camera_fb_return(fb);
+
+  //Incrementa el valor
+  fotoNum++;
+
+  //Retardo de 2 segundos
+  delay(2000);
+}
+
 ```
 
 ### Codigo de pruebas que cuenta las cantidad de archivos en la tarjeta sd funciona
