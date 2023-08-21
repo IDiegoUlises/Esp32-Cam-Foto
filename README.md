@@ -227,6 +227,56 @@ void printDirectory(File dir) {
 }
 ```
 
+### Codigo experimental que cuenta archivo sd
+```c++
+#include "FS.h"
+#include "SD_MMC.h"
+
+int numFiles = 0;
+
+void setup()
+{
+  //Inicia el puerto serial
+  Serial.begin(115200);
+
+  //SD incializada correctamente
+  if (!SD_MMC.begin())
+  {
+    Serial.println("SD Card Montada incorrectamente");
+    return;
+  }
+
+  uint8_t cardType = SD_MMC.cardType();
+
+  //En caso que no se detecte una tarjeta sd
+  if (cardType == CARD_NONE)
+  {
+    Serial.println("No SD Card introducida");
+    return;
+  }
+}
+
+void loop()
+{
+
+}
+
+void contarFiles()
+{
+  File root = SD_MMC.open("/");
+
+  File entrar = null;
+  
+  while(entrar == !entrar)
+  {
+    entrar = root.openNextFile();
+    numFiles++;
+  }
+
+}
+
+```
+
 IDEA ORIGINALMENTE EN CODIGO UTILIZA LA MEMORIA EEPROM QUE ESTA OBSOLETA PERO INTERNAMENTE SE UTILIZA LA MEMORIA NVS, PORQUE UTILIZAR LA MEMORIA INTERNA DEL MICROCONTROLADOR Y NO UTILIZAR LA TARJETA SD QUE ES UNA MEJOR MEMORIA SIMPLEMENTE SE PUEDE CONTAR CUANTOS IMAGENES AHI EN LA CARPETA SACAR EL TOTAL Y EL CONTADOR SUMARLE +1 EN EL NOMBRE Y LISTO
 
 FRAMESIZE_VGA mas pequeña pero con mejor resolucion
