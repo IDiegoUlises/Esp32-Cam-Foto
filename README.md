@@ -212,7 +212,7 @@ int contarFiles()
 }
 ```
 
-### Codigo Completo probando
+### Codigo completo, funcionando que al iniciar cuenta la cantidad de imagenes en la sd y captura una nueva imagen cada 2 segundos  
 
 ```c++
 #include "esp_camera.h"
@@ -238,7 +238,7 @@ int contarFiles()
 #define PCLK_GPIO_NUM     22
 
 //Numero de foto
-int fotoNum = 0;
+int fotoNum;
 
 void setup()
 {
@@ -314,15 +314,6 @@ void setup()
     return;
   }
 
-  uint8_t cardType = SD_MMC.cardType();
-
-  //En caso que no se detecte una tarjeta sd
-  if (cardType == CARD_NONE)
-  {
-    Serial.println("No SD Card introducida");
-    return;
-  }
-
   //La funcion para contar archivos que devuelve la cantidad de archivos
   fotoNum = contarFiles();
 
@@ -378,8 +369,8 @@ void TomarFoto()
 
 int contarFiles()
 {
-  //Inicia en -1 porque en el bucle do-while se hace un paso adicional
-  int numFiles = -1;
+  //La definicion de esta variable con (-1) devuelve el total de archivo al definirlo con (0) devuelve el total de archivos +1  
+  int numFiles = 0;
 
   //Abre la raiz de la sd
   File root = SD_MMC.open("/");
