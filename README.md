@@ -399,7 +399,7 @@ IDEA ORIGINALMENTE EN CODIGO UTILIZA LA MEMORIA EEPROM QUE ESTA OBSOLETA PERO IN
 FRAMESIZE_VGA mas pequeña pero con mejor resolucion
 
 ### Codigo aparte con display
-* recordar que para funcione la librerias de adafruit se debe descargar la libreria Adafruit BusIO
+* recordar que para funcione la librerias de adafruit se debe descargar la libreria Adafruit BusIO lo pide como dependencia
 * mas informacion en https://github.com/adafruit/Adafruit_VEML6075/issues/5
 
 ```c++
