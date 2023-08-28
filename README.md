@@ -404,6 +404,10 @@ FRAMESIZE_VGA mas pequeña pero con mejor resolucion
 * Adicionalmente se debe descargar gfx de adafruit https://github.com/adafruit/Adafruit-GFX-Library
 * y ademas para el modulo en especifico https://github.com/adafruit/Adafruit-ST7735-Library
 
+### Codigo que compila pero no probado
+* mas informacion sobre el uso de esta pantalla https://www.instructables.com/Value-Your-Project-Use-Graphic-Display/
+* mas informacion sobre jppg convertidor nose para que sirve pero dicen que funciona https://github.com/Bodmer/TJpg_Decoder/blob/master/examples/SD%20Card/SD_Jpg/SD_Jpg.ino#L33
+
 ```c++
 #include <Adafruit_GFX.h> // Core graphics library
 #include <Adafruit_ST7735.h> // Hardware-specific library for ST7735
@@ -419,7 +423,10 @@ FRAMESIZE_VGA mas pequeña pero con mejor resolucion
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST);
 
 void setup() {
-  // put your setup code here, to run once:
+   tft.setCursor(0, 0);
+  //tft.setTextColor(color);
+  tft.setTextWrap(true);
+  tft.print("hola mundo");
 
 }
 
