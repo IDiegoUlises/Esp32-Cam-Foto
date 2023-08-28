@@ -398,3 +398,31 @@ IDEA ORIGINALMENTE EN CODIGO UTILIZA LA MEMORIA EEPROM QUE ESTA OBSOLETA PERO IN
 
 FRAMESIZE_VGA mas pequeña pero con mejor resolucion
 
+### Codigo aparte con display
+* recordar que para funcione la librerias de adafruit se debe descargar la libreria Adafruit BusIO
+* mas informacion en https://github.com/adafruit/Adafruit_VEML6075/issues/5
+
+```c++
+#include <Adafruit_GFX.h> // Core graphics library
+#include <Adafruit_ST7735.h> // Hardware-specific library for ST7735
+#include <SPI.h>
+ 
+#define TFT_DC 17 //A0
+#define TFT_CS 21 //CS
+#define TFT_MOSI 2 //SDA
+#define TFT_CLK 23 //SCK
+#define TFT_RST 0 
+#define TFT_MISO 0
+ 
+Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST);
+
+void setup() {
+  // put your setup code here, to run once:
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+}
+```
