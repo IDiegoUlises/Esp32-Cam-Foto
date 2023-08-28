@@ -401,6 +401,8 @@ FRAMESIZE_VGA mas pequeña pero con mejor resolucion
 ### Codigo aparte con display
 * recordar que para funcione la librerias de adafruit se debe descargar la libreria Adafruit BusIO lo pide como dependencia
 * mas informacion en https://github.com/adafruit/Adafruit_VEML6075/issues/5
+* Adicionalmente se debe descargar gfx de adafruit https://github.com/adafruit/Adafruit-GFX-Library
+* y ademas para el modulo en especifico https://github.com/adafruit/Adafruit-ST7735-Library
 
 ```c++
 #include <Adafruit_GFX.h> // Core graphics library
