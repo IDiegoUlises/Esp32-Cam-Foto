@@ -392,4 +392,6 @@ int contarFiles()
 }
 ```
 
+### Captura de la camara
+<img src="https://github.com/IDiegoUlises/Esp32-Firebase/blob/main/Images/ff.png" width="1000" height="500" />
 
