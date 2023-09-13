@@ -395,6 +395,6 @@ int contarFiles()
 ### Esp32 Cam Funcionando
 <img src="https://github.com/IDiegoUlises/Esp32-Cam-Foto-En-SD/blob/main/Imagenes/IMG_20230912_220816.jpg" />
 
-### Fotos de la camara
+### Fotos de la Camara
 <img src="https://github.com/IDiegoUlises/Esp32-Cam-Foto-En-SD/blob/main/Imagenes/Foto-de-la-camara.png" width="1000" height="500" />
 
