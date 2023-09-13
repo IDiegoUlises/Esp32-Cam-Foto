@@ -212,8 +212,7 @@ int contarFiles()
 }
 ```
 
-### Codigo completo, funcionando que al iniciar cuenta la cantidad de imagenes en la sd y captura una nueva imagen cada 2 segundos  
-
+### Codigo inicia contando la cantidad de imagenes dentro de la sd y toma una fotografia cada 2 segundos  
 ```c++
 #include "esp_camera.h"
 #include "FS.h"
